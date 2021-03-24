@@ -63,7 +63,9 @@ class ReactParser:
             else:
                 reactCode += line
         parsedReactCode = esprima.parseScript(reactCode, jsx=True)
-        self.angularGenerator.generateAngularComponent(parsedReactCode)
+        angularComponent, angularHTML = self.angularGenerator.generateAngularComponent(parsedReactCode, True)
+        print(angularComponent)
+        print(angularHTML)
 
 
 
