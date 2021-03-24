@@ -36,7 +36,6 @@ class ReactParser:
         css = f_react.read()
         f_ng.write(css)
 
-
     def generateAngularStructure(self):
         self.makeNewFolder('angular')
         files = self.parseStructure()

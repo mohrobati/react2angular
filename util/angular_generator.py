@@ -51,7 +51,6 @@ export class AppModule { }
             elif element.type == "FunctionDeclaration" and element.id.name in self.allReactComponents:
                 self.generateAngularComponent(element.body)
             elif element.type == "ReturnStatement" and element.argument.type == "JSXElement":
-                pass
-        # print(parsedReactComponent)
+                print(element)
 
 
