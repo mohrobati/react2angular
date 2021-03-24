@@ -1,0 +1,16 @@
+.EntryBox {
+    padding: 2em;
+    margin: 2em 2em 0 2em;
+    border-radius: 3%;
+}
+
+.EntryBox h2 {
+    text-transform: capitalize;
+    letter-spacing: 2px;
+    color: white;
+}
+
+.EntryBox img {
+    width: 100%;
+    border-radius: 3%;
+}
