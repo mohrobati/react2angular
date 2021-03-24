@@ -64,8 +64,15 @@ class ReactParser:
                 reactCode += line
         parsedReactCode = esprima.parseScript(reactCode, jsx=True)
         angularComponent, angularHTML = self.angularGenerator.generateAngularComponent(parsedReactCode, True)
-        print(angularComponent)
-        print(angularHTML)
+        f_ts = open(dir.replace("react", "angular").replace(".js", ".component.ts"), "w")
+        f_html = open(dir.replace("react", "angular").replace(".js", ".component.html"), "w")
+        f_ts.write(angularComponent)
+        f_html.write(angularHTML)
+
+    def transformReactFiles(self):
+        self.generateAngularStructure()
+        for file in self.parseStructure():
+            self.parseReactComponent(self.directory + file)
 
 
 

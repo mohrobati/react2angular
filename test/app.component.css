@@ -1,9 +1,0 @@
-.App {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding-bottom: 2em;
-    background: linear-gradient(180deg, rgba(150,150,150,1) 0%, rgba(94,94,94,1) 48%, rgba(59,58,58,1) 100%);
-  }
-  
