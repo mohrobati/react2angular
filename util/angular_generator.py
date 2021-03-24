@@ -54,6 +54,7 @@ export class AppModule { }
                 currReactComponent = element.id.name
                 self.generateAngularComponent(element.body, False)
             elif element.type == "ReturnStatement" and element.argument.type == "JSXElement":
+                print(element)
                 self.parseJSX(element.argument)
         if component:
             angularComponent += self.getComponentArgs(currReactComponent)
@@ -77,23 +78,33 @@ export class AppModule { }
         return angularComponentSyntax + "}"
 
     def parseJSX(self, jsxElement):
-        elementName = jsxElement.openingElement.name.name
-        if elementName in self.allReactComponents:
-            self.angularHTML += '<app-' + elementName
-        else:
-            self.angularHTML += '<' + elementName
-        for attribute in jsxElement.openingElement.attributes:
-            if attribute.value.expression:
-                self.angularHTML += ' [' + attribute.name.name + ']="' + attribute.value.expression.name + '"'
+        if not jsxElement.type == "JSXExpressionContainer":
+            elementName = jsxElement.openingElement.name.name
+            if elementName in self.allReactComponents:
+                self.angularHTML += '<app-' + elementName
             else:
-                self.angularHTML += ' ' + attribute.name.name.replace("className",
-                                                                      "class") + '="' + attribute.value.value + '"'
-        if jsxElement.openingElement.selfClosing:
-            self.angularHTML += '/>\n'
+                self.angularHTML += '<' + elementName
+            for attribute in jsxElement.openingElement.attributes:
+                if attribute.value.expression:
+                    self.angularHTML += ' [' + attribute.name.name.replace("style", "ngStyle") + ']="'
+                    if attribute.value.expression.properties:
+                        self.angularHTML += "{"
+                        for p in attribute.value.expression.properties:
+                            self.angularHTML += "'" + p.key.name + "'" + ": " + p.value.property.name + ';'
+                        self.angularHTML += "}"
+                    elif attribute.value.expression.object:
+                        self.angularHTML += attribute.value.expression.property.name + '"'
+                else:
+                    self.angularHTML += ' ' + attribute.name.name.replace("className",
+                                                                          "class") + '="' + attribute.value.value + '"'
+            if jsxElement.openingElement.selfClosing:
+                self.angularHTML += '/>\n'
+            else:
+                self.angularHTML += '>\n'
+            for child in jsxElement.children:
+                if child.type == "JSXElement" or child.type == "JSXExpressionContainer":
+                    self.parseJSX(child)
+            if jsxElement.closingElement:
+                self.angularHTML += "</" + jsxElement.closingElement.name.name + ">\n"
         else:
-            self.angularHTML += '>\n'
-        for child in jsxElement.children:
-            if child.type == "JSXElement":
-                self.parseJSX(child)
-        if jsxElement.closingElement:
-            self.angularHTML += "</" + jsxElement.closingElement.name.name + ">\n"
+            self.angularHTML += "{{" + jsxElement.expression.property.name + "}}"
